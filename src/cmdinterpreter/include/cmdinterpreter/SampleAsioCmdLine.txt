@@ -1,0 +1,146 @@
+#include <boost/asio.hpp>
+#include <boost/array.hpp>
+#include <iostream>
+
+
+void send_something(std::string host, int port, std::string message)
+{
+	boost::asio::io_service ios;
+			
+        boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::address::from_string(host), port);
+
+        boost::asio::ip::tcp::socket socket(ios);
+
+	socket.connect(endpoint);
+
+	boost::array<char, 128> buf;
+        std::copy(message.begin(),message.end(),buf.begin());
+	boost::system::error_code error;
+	socket.write_some(boost::asio::buffer(buf, message.size()), error);
+        socket.close();
+}
+
+int main()
+{
+    send_something("127.0.0.1", 31000, "hello flowers team");
+    return 0;
+}
+
+
+
+#define BOOST_THREAD_USE_LIB // For MinGW 4.5 - (https://svn.boost.org/trac/boost/ticket/4878)
+#include <boost/bind.hpp>
+#include <boost/asio.hpp>
+
+class Example {
+    public:
+        Example( boost::asio::io_service& io_service)
+            : input_buffer( INPUT_BUFFER_LENGTH), input_handle( io_service)
+        {
+            // Read a line of input.
+            boost::asio::async_read_until( input_handle, input_buffer, "\r\n",
+                boost::bind( &Example::handle_read, this,
+                    boost::asio::placeholders::error,
+                    boost::asio::placeholders::bytes_transferred));
+        }
+        void handle_read( const boost::system::error_code& error, std::size_t length);
+        void handle_write( const boost::system::error_code& error);
+    private:
+        boost::asio::streambuf input_buffer;
+        boost::asio::windows::stream_handle input_handle;
+};
+
+void Example::handle_read( const boost::system::error_code& error, std::size_t length)
+{
+    if (!error)
+    {
+        // Remove newline from input.
+        input_buffer.consume(1);
+        input_buffer.commit( length - 1);
+
+        std::istream is(&input_buffer);
+        std::string s;
+        is >> s;
+
+        std::cout << s << std::endl;
+
+        boost::asio::async_read_until(input_handle, input_buffer, "\r\n",
+           boost::bind( &Example::handle_read, this,
+               boost::asio::placeholders::error,
+               boost::asio::placeholders::bytes_transferred));
+    }
+    else if( error == boost::asio::error::not_found)
+    {
+        std::cout << "Did not receive ending character!" << std::endl;
+    }
+}
+
+void Example::handle_write( const boost::system::error_code& error)
+{
+    if (!error)
+    {
+        // Read a line of input.
+        boost::asio::async_read_until(input_handle, input_buffer, "\r\n",
+           boost::bind( &Example::handle_read, this,
+               boost::asio::placeholders::error,
+               boost::asio::placeholders::bytes_transferred));
+    }
+}
+
+int main( int argc, char ** argv)
+{
+    try {
+        boost::asio::io_service io_service;
+        Example obj( io_service);
+        io_service.run();
+    } catch( std::exception & e)
+    {
+        std::cout << e.what() << std::endl;
+    }
+    std::cout << "Program has ended" << std::endl;
+    getchar();
+    return 0;
+}
+
+
+struct CAsioSyncSocket {
+    asio::io_service io_service;
+    int _portnum;
+    boost::shared_ptr<asio::ip::tcp::socket> pSocket;
+
+    CAsioSyncSocket(int portnum) {
+        _portnum = portnum;
+    }
+
+    void Init() {
+        asio::ip::tcp::acceptor acc(
+                io_service,
+                asio::ip::tcp::endpoint(asio::ip::tcp::v4(), _portnum));
+        pSocket = boost::shared_ptr<asio::ip::tcp::socket>(new asio::ip::tcp::socket(io_service));
+
+        acc.accept(*pSocket);
+    }
+
+    std::string readline() {
+        asio::streambuf buf;
+        boost::system::error_code error;
+
+        asio::read_until(*pSocket, buf, "\n", error);
+
+        if (error == boost::asio::error::eof)
+            throw boost::system::system_error(error); // Connection closed cleanly by peer.
+        else if (error)
+            throw boost::system::system_error(error); // Some other error.
+
+
+        std::string data = asio::buffer_cast<const char*>(buf.data());
+        std::cout << data; // debug print
+        return data;
+    }
+
+    void sendline(asio::ip::tcp::socket & socket, const std::string& str) {
+        const std::string msg = str + "\n";
+        asio::write(socket, asio::buffer(msg));
+    }
+};
+

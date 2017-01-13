@@ -1,0 +1,16 @@
+sleep 5
+degree
+home
+rand
+sleep 5
+move 0 90.0
+sleep 3
+move 0 -90.0
+sleep 3
+j 45,45,45,45,45,45,45
+sleep 3
+joints 0,0,0,0,0,0,0
+sleep 3
+move 0,1 90,90
+sleep 4.0
+move 0,1 -90,-90
