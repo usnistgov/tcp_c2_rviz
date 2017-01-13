@@ -75,23 +75,47 @@ Now you can test the RVIZ motoman command and control. Open a separate terminal 
 
 	cd xxxx/tcp_c2_rviz/src/cmdinterpreter/python
 
-Now run the python application that will accepts text based command and control joint values for the motoma:
+Now run the python application that will accepts text based command and control joint values for the motoman:
 
-	> python socketcmdline.py 
+	> python socketcmdline.py 
 
 You should see the following sequence of socket information be displayed, as the python program is connecting vial socket 31000 to the cmdinterpreter ROS package:
 
-	Socket CreatedSocket Connected
+	Socket Created
+	Socket Connected
 	>
 
 You can now run some test commands that should be displayed in the RVIZ motoman display. Below are some sample commands with comments following the "#" pound sign:
 
-	> rand			# randonly move joints> home	 		# home joints, i.e., move joints to all zero positions> degrees           # use degrees as input values, not radians> j 45,45,45,45,45,45,45 # move ALL joints to all given positions
-	                    # joints and j are identical commands> sleep 10.0        # sleep 10.0 seconds (double to specify seconds)> move 0 90         # move n,m p,q : move joints n,m to  positions p,q> move 0 -90        # ditto
+	> rand			# randonly move joints
+	> home	 		# home joints, i.e., move joints to all zero positions
+	> degrees           # use degrees as input values, not radians
+	> j 45,45,45,45,45,45,45 # move ALL joints to all given positions
+	                    # joints and j are identical commands
+	> sleep 10.0        # sleep 10.0 seconds (double to specify seconds) 
+	> move 0 90         # move n,m p,q : move joints n,m to  positions p,q
+	> move 0 -90        # ditto
 
 There is not much error checking. So buyer beware. There is also the ability to read and process a test file of RVIZ motoman commands.
 
-	> file motoman.txtsubtokens ['sleep', '5']subtokens ['degrees']subtokens ['home']subtokens ['rand']subtokens ['sleep', '5']subtokens ['move', '0', '90.0']subtokens ['sleep', '3']subtokens ['move', '0', '-90.0']subtokens ['sleep', '3']subtokens ['j', '45,45,45,45,45,45,45']subtokens ['sleep', '3']subtokens ['joints', '0,0,0,0,0,0,0']subtokens ['sleep', '3']subtokens ['move', '0,1', '90,90']subtokens ['sleep', '4.0']subtokens ['move', '0,1', '-90,-90']>
+	> file motoman.txt
+	subtokens ['sleep', '5'] 
+	subtokens ['degrees'] 
+	subtokens ['home'] 
+	subtokens ['rand'] 
+	subtokens ['sleep', '5'] 
+	subtokens ['move', '0', '90.0'] 
+	subtokens ['sleep', '3'] 
+	subtokens ['move', '0', '-90.0'] 
+	subtokens ['sleep', '3'] 
+	subtokens ['j', '45,45,45,45,45,45,45'] 
+	subtokens ['sleep', '3'] 
+	subtokens ['joints', '0,0,0,0,0,0,0'] 
+	subtokens ['sleep', '3'] 
+	subtokens ['move', '0,1', '90,90'] 
+	subtokens ['sleep', '4.0'] 
+	subtokens ['move', '0,1', '-90,-90'] 
+	>
 If you want to quit the Python command line interface program hit ^C and the program will exit. If you want to exit both the Python command line interface program and the RVIZ motoman visualization, enter the command  "quit".
 
 <CENTER>
