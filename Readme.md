@@ -3,7 +3,7 @@
 ----
 
 Michaloski, John L. (Fed)
-11/17/2016 5:13:00 PM
+1/13/2017 2:36:12 PM
 MotomanRvizReadme.docx
 
 This document presents a Command and Control (C&C) text based interface for communicating with Robot Operating System (ROS) package thjat interfaces to an ROS RVIZ visualation of a robot (currently only Motoma SI20D). This implementation offers robot controllers that are not ROS based the ability to simulate robot motion that is displayed in RVIZ. It uses the Unified Robot Description Format (URDF) to provide the ROS parameter "robot_description" used by RVIZ to draw and control the robot.
@@ -69,7 +69,7 @@ You should see the following two screens: (1) the rviz motoman visualization; an
 </CENTER>
 
 <p align="center">
-**Figure 2 Motoman RVIZ Visualization**
+**Figure 1 Motoman RVIZ Visualization**
 </p>
 Now you can test the RVIZ motoman command and control. Open a separate terminal and change to the tcp_c2_rviz directory and under it the python directory in the cmdinterpreter src package. 
 
@@ -123,7 +123,7 @@ If you want to quit the Python command line interface program hit ^C and the pro
 </CENTER>
 
 <p align="center">
-**Figure 3 joint_state_publisher ROS GUI**
+**Figure 2 joint_state_publisher ROS GUI**
 </p>
 
 Command and Control Language
