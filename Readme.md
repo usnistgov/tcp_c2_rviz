@@ -3,7 +3,7 @@
 ----
 
 Michaloski, John L. (Fed)
-1/16/2017 1:41:02 PM
+1/16/2017 3:34:26 PM
 MotomanRvizReadme.docx
 
 This document presents a Command and Control (C&C) text based interface for communicating with Robot Operating System (ROS) package thjat interfaces to an ROS RVIZ visualation of a robot (currently only Motoma SI20D and Fanuc LRMate 200id). This implementation offers robot controllers that are not ROS based the ability to simulate robot motion that is displayed in RVIZ. It uses the Unified Robot Description Format (URDF) to provide the ROS parameter "robot_description" used by RVIZ to draw and control the robot.
@@ -68,12 +68,12 @@ In RVIZ you will need to go into global options and change the world coordinates
 #Testing
 After compiling you will have 1 interface packages: cmdinterpreter and a bunch of robot URDF configurations, so far: motoman_sia20d_support, fanuc_lrmate200id_support, and kuka_lwr_support. 
  - cmdinterpreter contains the ROS interface to the joint publisher, which reads commands on a socket and publishes the joints to a ROS topic and has the launch files.
- - motoman_sia20d_support, fanuc_lrmate200id_support, and motoman_sia20d_support contains the urdf/xacro and robot description 
+ - motoman_sia20d_support, fanuc_lrmate200id_support, and kuka_lwr_support contains the urdf/xacro and robot description 
 To run the motoman RVIZ command and control interfface, YOU MUST BE IN THE ROOT WORKSPACE DIRECTORY, and then run the following roslaunch sequence:
 
 	> cd tcp_c2_rviz 
 	> sourc devel/setup.bash
-	> roslaunch cmdinterpreter rviz.launch robot:= motoman_sia20d | fanuc_lrmate200id
+	> roslaunch cmdinterpreter rviz.launch robot:= motoman_sia20d | fanuc_lrmate200id | kuka_lwr
 If you omit the robot roslaunch command line argument, the default value is "motoman_sia20d". You should see the following two screens: (1) the rviz motoman visualization; and (2) the joint_state_publisher.
 
 <CENTER>
@@ -108,7 +108,7 @@ Now run the python application that will accepts text based command and control 
 
 	> python socketcmdline.py 
 
-You should see the following sequence of socket information be displayed, as the python program is connecting vial socket 31000 to the cmdinterpreter ROS package:
+You should see the following sequence of socket information be displayed, as the python program is connecting vial socket 31000 to the cmdinterpreter ROS package (where ">" is the command line prompt):
 
 	Socket Created
 	Socket Connected
