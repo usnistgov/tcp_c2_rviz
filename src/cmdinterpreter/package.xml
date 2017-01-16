@@ -58,7 +58,6 @@
    <run_depend>tf_conversions</run_depend>
    <run_depend>eigen_conversions</run_depend>
    <run_depend>rviz_visual_tools</run_depend>
-   <run_depend>nistcrcl</run_depend>
    
 </package>
 

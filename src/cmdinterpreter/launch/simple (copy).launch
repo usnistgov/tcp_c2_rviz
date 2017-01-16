@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+
+<launch>
+	<arg name="bprefix" default="true"/>
+
+	<!--<param name="robot_description" command="cat $(find robotduo)/urdf/tworobot.urdf" />-->
+
+  	<param name="robot_description" 
+		command="$(find xacro)/xacro.py $(find robotconfig)/urdf/motomanrobot.xacro" /> 
+  
+ 	<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" output="screen" />
+
+	<!-- We do not have a robot connected, so publish fake joint states -->
+	<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+	    <param name="/use_gui" value="true"/>
+	    <rosparam param="/source_list">[nist_controller/robot/joint_states]</rosparam>
+	</node>
+
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find robotconfig)/visualize.rviz" required="true" />
+
+</launch>

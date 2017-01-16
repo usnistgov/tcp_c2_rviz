@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<robot name="fanuc_lrmate200id" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find fanuc_lrmate200id_support)/urdf/lrmate200id_macro.xacro"/>
+   <xacro:include filename="$(find fanuc_lrmate200id_support)/urdf/robotiq_c2_model_macro.xacro"/>
+   <xacro:include filename="$(find motoman_sia20d_support)/urdf/sia20d_macro.xacro"/>
+    <xacro:fanuc_lrmate200id prefix="fanuc_"/>
+   <xacro:robotiq_c2_model prefix="fanuc_"/>
+    <xacro:motoman_sia20d prefix="motoman_"/>
+   <xacro:robotiq_c2_model prefix="motoman_"/>
+
+  <link name="world" />
+ 
+  <!-- Dummy Link -->
+  <link name="link0" />
+  <joint name="world_joint" type="fixed">
+    <parent link="world" />
+    <child link="link0" />
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+  <!--[ERROR] [1474736838.974400369]: joint 'fanuc_joint_6-tool0' is not unique.-->
+  <!-- First Robot -->
+  <joint name="fanuc_joint_0" type="fixed">
+    <parent link="link0" />
+    <child link="fanuc_base_link" />
+    <origin xyz="0 -0.5 0" rpy="0 0 0"/>
+  </joint>
+  
+  <joint name="fanuc_joint_6-tool0" type="fixed">
+    <!--      <origin xyz="0 0 0" rpy="${m_pi} ${-m_pi_2} 0" /> -->
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="fanuc_link_6" />
+    <child link="fanuc_robotiq_85_adapter_link" />
+    <axis xyz="0 0 0"/>
+  </joint> 
+  
+  <!-- Second Robot -->
+  <joint name="motoman_joint_0" type="fixed">
+    <parent link="link0" />
+    <child link="motoman_base_link" />
+    <origin xyz="0 0.5 0" rpy="0 0 0"/>
+  </joint>
+   <joint name="motoman_link_t-tool0" type="fixed" >
+     <!--  <origin xyz="0 0 0.0" rpy="0 0 -3.1416"/> -->
+     <origin xyz="0 0 0.0" rpy="0  -1.57  0"/>
+      <parent link="motoman_link_t" />
+      <child link="motoman_robotiq_85_adapter_link" />
+     </joint>
+  
+</robot>

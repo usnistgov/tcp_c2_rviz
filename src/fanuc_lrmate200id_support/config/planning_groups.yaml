@@ -1,0 +1,56 @@
+## http://wiki.ros.org/planning_environment/YAML%20configuration
+groups:
+
+  - name: fanuc_arm
+    joints:
+      fanuc_joint_1
+      fanuc_joint_2
+      fanuc_joint_3
+      fanuc_joint_4
+      fanuc_joint_5
+      fanuc_joint_6
+    links:
+      fanuc_link_1
+      fanuc_link_2
+      fanuc_link_3
+      fanuc_link_4
+      fanuc_link_5
+      fanuc_link_6
+
+  - name: motoman_arm
+    joints:
+     motoman_joint_s 
+     motoman_joint_l 
+     motoman_joint_e
+     motoman_joint_u 
+     motoman_joint_r 
+     motoman_joint_b   
+     motoman_joint_t   
+
+
+  - name: fanuc_end_effector
+    joints: 
+      fanuc_robotiq_80_adapter_joint
+      fanuc_robotiq_80_base_joint
+      fanuc_robotiq_80_left_finger_joint
+      fanuc_robotiq_80_left_finger_tip_joint
+      fanuc_robotiq_80_left_inner_knuckle_joint
+      fanuc_robotiq_80_left_knuckle_joint
+      fanuc_robotiq_80_right_finger_joint
+      fanuc_robotiq_80_right_finger_tip_joint
+      fanuc_robotiq_80_right_inner_knuckle_joint
+      fanuc_robotiq_80_right_knuckle_joint
+
+  - name: motoman_end_effector
+    joints: 
+      motoman_robotiq_80_adapter_joint
+      motoman_robotiq_80_base_joint
+      motoman_robotiq_80_left_finger_joint
+      motoman_robotiq_80_left_finger_tip_joint
+      motoman_robotiq_80_left_inner_knuckle_joint
+      motoman_robotiq_80_left_knuckle_joint
+      motoman_robotiq_80_right_finger_joint
+      motoman_robotiq_80_right_finger_tip_joint
+      motoman_robotiq_80_right_inner_knuckle_joint
+      motoman_robotiq_80_right_knuckle_joint
+

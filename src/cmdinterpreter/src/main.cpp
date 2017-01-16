@@ -62,7 +62,7 @@ int main(int argc, char** argv) {
         SetEnvironmentFromMap(envmap);
         double hz = cfg.GetSymbolValue("options.hz", 50.0).toNumber<double>();
         int port = cfg.GetSymbolValue("options.port", 29000).toNumber<int>();
-
+        
 
         // Initialize ROS
         ros::init(argc, argv, ROSPACKAGENAME);
@@ -71,6 +71,14 @@ int main(int argc, char** argv) {
         //  Required for multithreaded ROS communication  NOT TRUE: if not ros::spinOnce
         ros::AsyncSpinner spinner(2); // thread count = 2?
         spinner.start();
+        
+        // Now should know robot
+        std::string roboturdf;
+        nh.getParam("robotpkg", roboturdf );
+        
+        std::string world = cfg.GetSymbolValue(roboturdf+".base", "").c_str();
+        std::string eelink = cfg.GetSymbolValue(roboturdf+".eelink", "").c_str();
+
 
         //   RvizMarker setup
         rvizMarker = boost::shared_ptr<CRvizMarker>(new CRvizMarker(nh));
@@ -79,7 +87,7 @@ int main(int argc, char** argv) {
         packagepath = ros::package::getPath(ROSPACKAGENAME);
 
         JointStateUpdater updater(nh);
-        updater.Init("world", "motoman_link_t");
+        updater.Init(world, eelink);
         std::cout << "NC " << updater.Name().c_str() << "\n";
         std::cout << "num joints " << updater.NumJoints() << "\n";
         std::cout << "Joint names " << RCS::VectorDump<std::string>(updater.JointNames()).c_str() << "\n" << std::flush;
