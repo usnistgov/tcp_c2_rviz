@@ -3,10 +3,10 @@
 ----
 
 Michaloski, John L. (Fed)
-1/16/2017 3:34:26 PM
+1/17/2017 8:59:49 AM
 MotomanRvizReadme.docx
 
-This document presents a Command and Control (C&C) text based interface for communicating with Robot Operating System (ROS) package thjat interfaces to an ROS RVIZ visualation of a robot (currently only Motoma SI20D and Fanuc LRMate 200id). This implementation offers robot controllers that are not ROS based the ability to simulate robot motion that is displayed in RVIZ. It uses the Unified Robot Description Format (URDF) to provide the ROS parameter "robot_description" used by RVIZ to draw and control the robot.
+This document presents a Command and Control (C&C) text based interface for communicating with Robot Operating System (ROS) package that interfaces to a ROS RVIZ visualization of a robot (currently only Motoma SI20D, Fanuc LRMate 200id, and Kuka LWR). This implementation offers robot controllers that are not ROS-based the ability to simulate robot motion that is displayed in RVIZ. It uses the Unified Robot Description Format (URDF) to provide the ROS parameter "robot_description" used by RVIZ to draw and control the robot.
 The tested version information for the ROS implementation is:
  - ROS indigo 
  - OS - Ubuntu 12.04 (64-bit)
@@ -14,7 +14,7 @@ The tested version information for the ROS implementation is:
  - Package versions at the end of the document. Note many of the packages don't appear to be used but are included as a dependency by other packages.
 The text based C&C interface appear later in the document. 
 #Software Architecture
-The ROS software is as minimalistic as possible. You will need ROS, RVIZ, joint_state_publisher, and robot_transform packages installed, but these are part of the main distribution or ROS so this should not be an issue.  RVIZ reads the robot_description ROS parameter to determine how and where to display a robot. Using this robot_description ROS parameter the cmdinterpreter package understands the joint configuration of the robot.  The command and control interface to the RVIZ robot is only through joints. (However, the ability to send RVIZ markers which required poses (position and orientation) is available, but is not documented at this time.) 
+The ROS software is as minimalistic as possible. You will need ROS, RVIZ, joint_state_publisher, and robot_transform packages installed, but these are part of the main distribution or ROS so this should not be an issue.  RVIZ reads the "robot_description"  ROS parameter to determine how and where to display a robot. Using this "robot_description" ROS parameter the cmdinterpreter package understands the joint configuration of the robot. Note, only serial kinematic chains are supported (i.e., industrial robots not androids with a head and two arms.) The C&C interface maps joint numbers (0..n-1) into the corresponding joint names based on kinematic name position.  The command and control interface to the RVIZ robot is only through joints. (However, the ability to send RVIZ markers which requires poses (position and orientation) is available, but is not documented at this time.) 
 The cmdinterpreter package advertises joint value updates to the /nist_controller/robot/joint_states topic which is read by the joint_state_publisher package.
 
 <CENTER>
@@ -28,12 +28,17 @@ The cmdinterpreter package advertises updates to the /nist_controller/robot/join
 	    <rosparam param="/source_list">[nist_controller/robot/joint_states]</rosparam>
 	</node>
 
-In roslaunch, a robot description for the motoman sia20d is loaded and used by RVIZ.
+In roslaunch, a "robot description" is loaded into the ROS system (default is  the motoman sia20d) is loaded and used by RVIZ. 
 
-	<param name="robot_description" command="$(find xacro)/xacro.py $(find motoman_sia20d_support)/urdf/ motoman_sia20d.xacro" />
-	
-	<node name="rviz" pkg="rviz" type="rviz">
+	<arg name="robotpkg" default="motoman_sia20d"/>
+	<param name="robotpkg" value="$(arg robotpkg)"/>
+	<param name="robot_description" textfile="src/$(arg robotpkg)_support/urdf/robot.urdf" />
+The robot pkg argument can be specified on the roslaunch command line, using the "robot" ROS arg.
+
+	roslaunch cmdinterpreter rviz.launch robot:= kuka_lwr
 
+This informs the launch file that the "robotpkg" arg is now "kuka_lwr" and not  "motoman_sia20d". 
+Note, you **must** be in the root directory of the workspace. The reason you must be in the root /workspace (and not /src) is that the ros parameter "robot_description" uses a semi-hard-coded path to the robot urdf file. This was because ROS does not allow embedded execution of arg inside of find, i.e., the launch file does not support: $(find $(arg robotpkg)/urdf/robot.urdf) . Plus, ROS does also not allow programs to access the launch arguments (or if possible, it wasn't obvious.)  
 #Installation
 The Motoman Command and Control Visualization assumes ROS indigo has been installed on your platform. It should work under Jade or Kinetic versions of ROS but has not been tested. There is not much source, and you will have to compile, so 
 ##Download & Build from Source
