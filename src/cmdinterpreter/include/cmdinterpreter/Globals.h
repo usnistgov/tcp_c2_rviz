@@ -7,6 +7,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <boost/thread.hpp>
 
 typedef sensor_msgs::JointState_<std::allocator<void> > JointState;
 
@@ -27,6 +28,14 @@ inline std::string StrFormat(const char *fmt, ...) {
     }
     va_end(argptr);
     return tmp.substr(0, m);
+}
+
+/*!
+ * \brief sleep milliseconds. Equivalent to Sleep in windows.
+ * \param ms number of milliseconds to sleep
+ */
+inline void Sleep(unsigned int ms) {
+    boost::this_thread::sleep(boost::posix_time::milliseconds(ms));
 }
 
 inline std::vector<std::string> Split(const std::string &text, char sep, bool bKeepEmpty = false) {

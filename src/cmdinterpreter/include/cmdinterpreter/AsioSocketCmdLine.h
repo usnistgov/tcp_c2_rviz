@@ -36,7 +36,7 @@ struct socket_line_connection {
         } else {
             std::string data = asio::buffer_cast<const char*>(buf_.data());
             data.resize(n);
-            std::cout << "Add: " << data; // debug print
+            //std::cout << "Add: " << data; // debug print
             incmds.AddMsgQueue(data);
             buf_.consume(n); // will infinite loop here unless consumed
             start();
