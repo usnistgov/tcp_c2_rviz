@@ -1,9 +1,9 @@
 
-#Readme for Textbased Command and Control using Socket of  a ROS RVIZ Visualization of a Motoman 
+#Readme for Textbased Command and Control using Socket of a ROS RVIZ Visualization of a Motoman 
 ----
 
 Michaloski, John L. (Fed)
-1/17/2017 8:59:49 AM
+1/26/2017 1:52:06 PM
 MotomanRvizReadme.docx
 
 This document presents a Command and Control (C&C) text based interface for communicating with Robot Operating System (ROS) package that interfaces to a ROS RVIZ visualization of a robot (currently only Motoma SI20D, Fanuc LRMate 200id, and Kuka LWR). This implementation offers robot controllers that are not ROS-based the ability to simulate robot motion that is displayed in RVIZ. It uses the Unified Robot Description Format (URDF) to provide the ROS parameter "robot_description" used by RVIZ to draw and control the robot.
@@ -205,6 +205,11 @@ Most of the command and control is for the ROS package intervace. Some commands 
 <TD>sleep<BR></TD>
 <TD>seconds<BR></TD>
 <TD>Python sleeps for seconds in double<BR></TD>
+</TR>
+<TR>
+<TD>goto<BR></TD>
+<TD>J1,Jn<BR></TD>
+<TD>Move from current joint position to goal joint position. Use linear interpolation to move each joint. You must specify values for all joints.<BR></TD>
 </TR>
 </TABLE>
 

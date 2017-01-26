@@ -21,6 +21,7 @@ namespace pt = boost::property_tree;
 #include <ros/package.h>
 #include <ros/console.h>
 #include <ros/master.h>
+#include <tf/transform_listener.h>
 
 #include "NIST/Config.h"
 #include "NIST/RCSThreadTemplate.h"
@@ -51,6 +52,7 @@ int main(int argc, char** argv) {
         boost::shared_ptr<CRvizMarker> rvizMarker;
         std::string exedirectory;
         std::string packagepath;
+
 
         // Find path of executable
         std::string path(argv[0]);
@@ -91,7 +93,9 @@ int main(int argc, char** argv) {
         std::string roboturdf;
         nh.getParam("robotpkg", roboturdf );
         ros::Rate r(hz); // 10 times a second = 10Hz
-        
+        tf::TransformListener listener;
+        tf::StampedTransform transform;
+     
 
         //  Required for multithreaded ROS communication  NOT TRUE: if not ros::spinOnce
         ros::AsyncSpinner spinner(2); // thread count = 2?
@@ -142,6 +146,23 @@ int main(int argc, char** argv) {
                         } else if (strcasecmp(tokens[0].c_str(), "rand") == 0) {
                             std::vector<double> positions = GenRandomVector(updater.NumJoints(), -M_PI, M_PI);
                             updater.Update(updater.JointNames(), positions);
+                        } else if (strcasecmp(tokens[0].c_str(), "mark") == 0) {
+                            try {
+                                ros::Time now = ros::Time::now() - ros::Duration(1);
+                                //listener.waitForTransform(eelink.c_str(), world.c_str(), now, ros::Duration(3.0));
+                                // http://docs.ros.org/jade/api/tf/html/c++/classtf_1_1Transformer.html
+                                listener.lookupTransform( eelink.c_str(), world.c_str(),  now, transform);
+                                tf::Transform ttransform = transform.inverse();
+                        
+                                tf::Pose pose(ttransform.getRotation(), ttransform.getOrigin());
+                                std::cout << "Mark pose = " << RCS::DumpPoseSimple(pose).c_str() << "\n";
+                                rvizMarker->Send(pose,world);
+                                ros::spinOnce();
+
+                            } catch (tf::TransformException ex) {
+                                ROS_ERROR("%s", ex.what());
+                                ros::Duration(1.0).sleep();
+                            }
                         }
                         break;
                     case 2:
@@ -149,7 +170,7 @@ int main(int argc, char** argv) {
                             std::vector<std::string> dbls = Split(tokens[1], ',');
                             std::vector<double> pos = Convert<std::vector<std::string>, std::vector<double>>(dbls);
                             tf::Pose pose = Conversion::CreateRPYPose(pos);
-                            rvizMarker->Send(pose);
+                            rvizMarker->Send(pose,world);
                         } else if (strcasecmp(tokens[0].c_str(), "color") == 0) {
                             std::vector<std::string> dbls = Split(tokens[1], ',');
                             std::vector<double> colors = Convert<std::vector<std::string>, std::vector<double>>(dbls);
@@ -190,6 +211,7 @@ int main(int argc, char** argv) {
                         break;
                     default:
                         std::cout << "Bad command input\n";
+                        std::cout << RCS::VectorDump<std::string>(tokens) << "\n";
                         break;
                 }
 

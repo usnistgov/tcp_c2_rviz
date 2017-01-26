@@ -64,8 +64,9 @@ public:
     /*!
      *\brief Publish a visualization marker message to the Marker topic.
      * \param pose p is where the marker is to be placed relative to the base link.
+     * \param frame is the world fixed frame name or base
      */
-    int Send(tf::Pose p);
+    int Send(tf::Pose p, std::string frame);
     
     /*!
      *\brief Set the marker to be displayed.

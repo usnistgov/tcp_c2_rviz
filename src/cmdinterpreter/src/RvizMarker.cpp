@@ -37,10 +37,10 @@ void CRvizMarker::Clear() {
     marker_pub.publish(reset_marker_);
     
 }
-int CRvizMarker::Send(tf::Pose p) {
+int CRvizMarker::Send(tf::Pose p, std::string frame) {
     visualization_msgs::Marker marker;
     // Set the frame ID and timestamp.  See the TF tutorials for information on these.
-    marker.header.frame_id = "/world";
+    marker.header.frame_id = frame;
     marker.header.stamp = ros::Time::now();
 
     // Set the namespace and id for this marker.  This serves to create a unique ID
